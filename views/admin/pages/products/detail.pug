@@ -1,36 +1,90 @@
 extends ../../layouts/default.pug
+include ../../mixins/alert.pug
 
 block main
-    h1(class = "mb-4") chi tiết sản phẩm 
-    if (product.title)
-        h1(class="mb-4") #{product.title}
+    +alertSuccess(300)
+    +alertError(300)
+    .container.mt-4
+        .card.product-card
+            .card-body
+                h2.card-title.text-center.mb-4 Chi tiết sản phẩm
 
-    if (product.price)
-        div(class="mb-4") Giá: <b>#{product.price}$</b>
+                if (product.title)
+                    h3.text-primary.mb-3 #{product.title}
 
-    if (product.discountPercentage)
-        div(class="mb-4") Giảm giá: <b>#{product.discountPercentage}%</b>
+                if (product.thumbnail)
+                    .text-center.mb-3
+                        img.product-image(src=product.thumbnail)
 
-    if (product.stock)
-        div(class="mb-4") Còn lại: <b>#{product.stock}</b>
+                .row
+                    .col-md-6
+                        if (product.price)
+                            p.info-item
+                                span.label Giá:
+                                b.text-danger #{product.price}$
 
-    if (product.thumbnail)
-        div(class="mb-4")
-            img(src=product.thumbnail style="width: 100px")
+                        if (product.discountPercentage)
+                            p.info-item
+                                span.label Giảm giá:
+                                b.text-success #{product.discountPercentage}%
 
-    if (product.status)
-        div(class="mb-4")
-            span Trạng thái:
-            if (product.status === "active")
-                span(class="badge badge-success") Hoạt động
-            else
-                span(class="badge badge-danger") Dừng hoạt động
+                        if (product.stock)
+                            p.info-item
+                                span.label Còn lại:
+                                b #{product.stock}
 
-    if (product.position)
-        div(class="mb-4") Vị trí: <b>#{product.position}</b>
+                    .col-md-6
+                        if (product.status)
+                            p.info-item
+                                span.label Trạng thái:
+                                if (product.status === "active")
+                                    span.badge.badge-success Hoạt động
+                                else
+                                    span.badge.badge-danger Dừng hoạt động
 
-    if (product.description)
-        div(class="mb-4") !{product.description}
+                        if (product.position)
+                            p.info-item
+                                span.label Vị trí:
+                                b #{product.position}
 
-    a(href=`${prefixAdmin}/products/edit/${product.id}` class="btn btn-warning btn-sm") Sửa
+                if (product.description)
+                    hr
+                    .description
+                        h5 Mô tả sản phẩm
+                        .content !{product.description}
+
+                .text-end.mt-4
+                    a.btn.btn-warning(href=`${prefixAdmin}/products/edit/${product.id}`) Sửa
+
+        // ===== COMMENTS =====
+        .card.mt-4
+            .card-body
+                h4.mb-3 Bình luận
+
+                if (comments && comments.length > 0)
+                    each comment in comments
+                        .comment-item
+                            .d-flex.justify-content-between
+                                div
+                                    b #{comment.user_id.fullName || "Người dùng"}
+                                    if (comment.rating)
+                                        span.text-warning.ml-2 ⭐ #{comment.rating}/5
+
+                                form(
+                                    action=`${prefixAdmin}/comments/delete/${comment._id}?_method=DELETE` 
+                                    method="POST"
+                                    onsubmit="return confirm('Xóa bình luận này?')"
+                                )
+                                    button.btn.btn-danger.btn-sm Xóa
+
+                            if (comment.content)
+                                p.mt-2.mb-1 #{comment.content}
+
+                            if (comment.image)
+                                img.comment-image(src=comment.image)
+
+                            hr
+                else
+                    p.text-muted Chưa có bình luận nào
+
     script(src="/admin/js/product.js")

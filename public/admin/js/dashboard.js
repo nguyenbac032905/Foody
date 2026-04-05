@@ -1,5 +1,6 @@
 let barChart = null;
-let pieChart = null;
+let donutChart = null;
+let lineChartYear = null;
 const getChartRevenue = (value) => {
     fetch(`/admin/dashboard/revenue-category?filter=${value}`)
         .then(res => res.json())
@@ -32,13 +33,13 @@ const getChartRevenue = (value) => {
                 }
             }
             });
-            //Pie Chart
-            const ctxBarChart = document.querySelector("#pieChart");
-            if (pieChart) {
-                pieChart.destroy();
+            //donut Chart
+            const ctxBarChart = document.querySelector("#donutChart");
+            if (donutChart) {
+                donutChart.destroy();
             }
-            pieChart = new Chart(ctxBarChart,{
-                type: "pie",
+            donutChart = new Chart(ctxBarChart,{
+                type: "doughnut",
                 data: {
                     labels:labels,
                     datasets: [{
@@ -68,3 +69,48 @@ if(filterSelect){
     })
 }
 getChartRevenue(filterSelect.value);
+
+//slide
+const swiper = new Swiper('.swiper', {
+  slidesPerView: 3, // hiển thị 4 sản phẩm cùng lúc
+  spaceBetween: 20,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+  },
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  breakpoints: {
+    1024: { slidesPerView: 4 },
+    768: { slidesPerView: 2 },
+    480: { slidesPerView: 1 },
+  }
+});
+// === Doanh thu 6 tháng gần nhất (Line Chart) ===
+const getChartRevenueYear = () => {
+    fetch(`/admin/dashboard/revenue-year`)
+        .then(res => res.json())
+        .then(data => {
+            const ctx = document.getElementById("lineChartYear");
+            if(lineChartYear) lineChartYear.destroy();
+
+            lineChartYear = new Chart(ctx, {
+                type: "line",
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Doanh thu 6 tháng gần nhất' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+}
+getChartRevenueYear();
+

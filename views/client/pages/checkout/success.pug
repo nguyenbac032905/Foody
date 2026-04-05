@@ -71,7 +71,7 @@ block main
                             tr
                                 td #{order.coupon.coupon_code}
                                 td 
-                                    span.order_total #{order.coupon.discountAmount.toLocaleString('vi-VN')} đ
+                                    span.order_total #{(order.coupon.discountAmount? order.coupon.discountAmount : 0).toLocaleString('vi-VN')} đ
                                 td 
-                                    span.order_total #{(order.orderTotalPrice-order.coupon.discountAmount).toLocaleString('vi-VN')} đ
+                                    span.order_total #{(order.orderTotalPrice-(order.coupon.discountAmount? order.coupon.discountAmount : 0)).toLocaleString('vi-VN')} đ
 

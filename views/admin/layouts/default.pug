@@ -2,6 +2,7 @@ doctype html
 html 
     head 
         title #{pageTitle}
+        link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css")
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.css" integrity="sha512-9NawOLzuLE2GD22PJ6IPWXEjPalb/FpdH1qMpgXdaDM+0OfxEV75ZCle6KhZi0vM6ZWvMrNnIZv6YnsL+keVmA==" crossorigin="anonymous" referrerpolicy="no-referrer")
         link(rel="stylesheet" type="text/css" href="https://unpkg.com/file-upload-with-preview/dist/style.css")
         link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer")
@@ -15,6 +16,7 @@ html
                 include ../partials/sider.pug
                 .main 
                     block main
+                script(src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js")
                 //-Chart
                 script(src="https://cdn.jsdelivr.net/npm/chart.js")
                 //-xem ảnh

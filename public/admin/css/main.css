@@ -409,3 +409,99 @@
 }
 
 /*# sourceMappingURL=main.css.map */
+/* Card tổng */
+.product-card {
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: none;
+}
+
+/* Ảnh */
+.product-image {
+    width: 140px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Label + info */
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.label {
+    font-weight: 500;
+    color: #555;
+}
+
+/* Description */
+.description h5 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.description .content {
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 10px;
+    line-height: 1.6;
+}
+
+/* Card comment tổng */
+.comment-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* Header comment (user + nút xoá) */
+.comment-item .d-flex {
+    align-items: center;
+}
+
+/* Tên user */
+.comment-item b {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Rating */
+.comment-item .text-warning {
+    font-size: 13px;
+    margin-left: 6px;
+}
+
+/* Nội dung */
+.comment-item p {
+    font-size: 14px;
+    color: #555;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    line-height: 1.5;
+}
+
+/* Ảnh comment */
+.comment-image {
+    width: 90px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+/* Nút xoá */
+.comment-item .btn-danger {
+    padding: 3px 10px;
+    font-size: 12px;
+}
+
+/* Hover nhẹ cho dễ nhìn */
+.comment-item:hover {
+    background: #fafafa;
+    transition: 0.2s;
+    border-radius: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+}

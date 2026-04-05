@@ -3,6 +3,7 @@ const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model");
 const priceNewProduct = require("../../helpers/product");
 const productCategoryHelper = require("../../helpers/product-category");
+const Comment = require("../../models/comment.model");
 module.exports.index = async (req, res) => {
 
   const products = await Product.find({
@@ -34,10 +35,11 @@ module.exports.detail = async (req, res) => {
       product.category = category;
     }
     product.newPrice = priceNewProduct.newPriceProduct(product);
-
+    const reviews = await Comment.find({deleted: false, product_id: product._id}).populate("user_id", "fullName");
     res.render("client/pages/products/detail", {
       pageTitle: product.pageTitle,
       product: product,
+      reviews: reviews
     });
   } catch (error) {
     res.redirect("/products");

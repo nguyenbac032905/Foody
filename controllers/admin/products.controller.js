@@ -7,6 +7,7 @@ const paginationHelper = require("../../helpers/pagination");
 const systemConfig = require("../../config/system");
 const createTreeHelper = require("../../helpers/createTree");
 const ProductCategory = require("../../models/product-category.model");
+const Comment = require("../../models/comment.model");
 // [GET] /admin/products
 module.exports.index = async (req,res) => {
     let find = {
@@ -178,7 +179,7 @@ module.exports.createPost = async (req,res) => {
     };
     // cú pháp tạo mới
     const product = new Product(req.body);
-    await product.save();
+    // await product.save();
     console.log(req.body)
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
@@ -233,9 +234,11 @@ module.exports.detail = async (req,res) => {
         };
 
         const product = await Product.findOne(find);
+        const comments = await Comment.find({product_id: product._id,deleted: false}).populate("user_id","fullName");
         res.render("admin/pages/products/detail",{
             pageTitle: product.title,
-            product: product
+            product: product,
+            comments: comments
         });
     } catch (error) {
         res.redirect(`${systemConfig.prefixAdmin}/products`);

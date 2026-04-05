@@ -3,6 +3,7 @@ const Product = require("../../models/product.model");
 const Account = require("../../models/account.model");
 const User = require("../../models/user.model");
 const Order = require("../../models/order.model");
+const monthHelper = require("../../helpers/months");
 // [GET] /admin/dashboard
 module.exports.dashboard = async (req, res) => {
     const statistic = {
@@ -44,9 +45,12 @@ module.exports.dashboard = async (req, res) => {
     statistic.user.active = await User.countDocuments({deleted: false,status: "active"});
     statistic.user.inactive = await User.countDocuments({deleted: false,status: "inactive"});
 
+    const bestSellerProduct = await Product.find({deleted: false}).sort({sold: -1}).limit(10).select("title sold thumbnail");
+    console.log(bestSellerProduct);
     res.render("admin/pages/dashboard/index",{
         pageTitle:  "dashboard",
-        statistic: statistic
+        statistic: statistic,
+        bestSellerProduct: bestSellerProduct
     }
     )
 }
@@ -131,4 +135,71 @@ module.exports.revenueCategory = async (req,res) => {
         message: "200",
         data: data
     })
+}
+module.exports.revenueYear = async (req,res) => {
+    try {
+        const now = new Date();
+        const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1); // 6 tháng gần nhất
+
+        // Aggregate doanh thu theo tháng
+        const revenueData = await Order.aggregate([
+        { 
+            $match: { createdAt: { $gte: sixMonthsAgo } } 
+        },
+        {
+            $addFields: {
+            totalAmount: {
+                $sum: {
+                $map: {
+                    input: "$products",
+                    as: "p",
+                    in: { 
+                    $multiply: ["$$p.price", "$$p.quantity", { $subtract: [1, { $divide: ["$$p.discountPercentage", 100] }] }] 
+                    }
+                }
+                }
+            }
+            }
+        },
+        {
+            $addFields: {
+            totalAmount: { $subtract: ["$totalAmount", { $ifNull: ["$coupon.discountAmount", 0] }] }
+            }
+        },
+        {
+            $group: {
+            _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+            revenue: { $sum: "$totalAmount" }
+            }
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } }
+        ]);
+
+        // Lấy nhãn tháng và dữ liệu
+        const labels = monthHelper.months({ count: 6 }); // ["10/2025", "11/2025", ...]
+        const dataMap = {};
+        revenueData.forEach(r => {
+        const key = `${r._id.month}/${r._id.year}`;
+        dataMap[key] = r.revenue;
+        });
+
+        const dataValues = labels.map(l => dataMap[l] || 0);
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu',
+                data: dataValues,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        };
+        
+        res.json(data);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Lỗi server" });
+    }
 }

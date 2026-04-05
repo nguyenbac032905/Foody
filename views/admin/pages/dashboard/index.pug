@@ -7,7 +7,7 @@ block main
                 .card-header Doanh thu bán hàng theo danh mục
                 .card-body
                     .row 
-                        .col-8
+                        .col-6
                             .row 
                                 .col-4 
                                     select.form-control(name="filter" filterSelect)
@@ -18,10 +18,34 @@ block main
                                 .col-6 
                                     div Tổng doanh thu: <span id="totalRevenue"></span> VNĐ
                             canvas(id="myChart")
-                        .col-4
-                            canvas(id="pieChart")
+                        .col-6 
+                            canvas(id="lineChartYear")
             
-        .col-6
+        .col-12
+            .row 
+                .col-8
+                    .card.mb-4 
+                        .card-header Top sản phẩm bán chạy 
+                        .card-body 
+                            .swiper
+                                .swiper-wrapper
+                                    each product in bestSellerProduct
+                                        .swiper-slide(
+                                            style="background:#fff; padding:10px; text-align:center; border-radius:8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display:flex; flex-direction:column; align-items:center;"
+                                        )
+                                            img(
+                                                src=product.thumbnail, 
+                                                alt=product.title, 
+                                                style="width:100%; height:100px; object-fit:cover; border-radius:5px; margin-bottom:8px;"
+                                            )
+                                            h4(style="font-size:14px; margin:5px 0; color:#333; text-align:center;")= product.title
+                                            p(style="font-size:12px; color:#666; text-align:center;") Sold: #{product.sold}
+                                //- Pagination & Navigation
+                                .swiper-pagination
+                                .swiper-button-next
+                                .swiper-button-prev
+                .col-4 
+                    canvas(id="donutChart" width="200" height="200")
     .row.mt-4
         .col-12
             .card.mb-4

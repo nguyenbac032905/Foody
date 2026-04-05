@@ -49,3 +49,38 @@ block main
                     +box-head("Mô tả sản phẩm")
                 .product-detail_description-desc !{product.description}
                 .product-detail_description-content !{product.content}
+            .product-detail_reviews 
+                .product-detail_reviews-title 
+                    +box-head("Đánh giá sản phẩm")
+                .product-detail_reviews-form 
+                    form(action=`/reviews` method="POST" enctype="multipart/form-data")
+                        input(type="hidden" name="productId" value=product.id)
+                        .form-group 
+                            label Đánh giá:
+                            select(name="rating" class="form-control")
+                                option(value="") -- Chọn số sao --
+                                option(value="5") ⭐⭐⭐⭐⭐
+                                option(value="4") ⭐⭐⭐⭐
+                                option(value="3") ⭐⭐⭐
+                                option(value="2") ⭐⭐
+                                option(value="1") ⭐
+                        .form-group 
+                            label Nội dung: 
+                            textarea(name="content" rows="4" placeholder="Viết đánh giá của bạn..." class="form-control")
+                        .form-group 
+                            label Ảnh: 
+                            input(type="file" name="image")
+                        button(type="submit") Gửi đánh giá
+                .product-detail_reviews-list 
+                    if reviews && reviews.length > 0
+                        each item in reviews 
+                            .review-item 
+                                .review-item-top
+                                    strong #{item.user_id.fullName || "Người dùng"}
+                                    span.review-item-rating #{item.rating} ⭐
+                                    span.review-item-time #{item.createdAt.toLocaleDateString('vi-VN')} 
+                                .review-item-content #{item.content}
+                                .review-item-images 
+                                    img(src=item.image, alt="Ảnh đánh giá")
+                    else
+                        p Chưa có đánh giá nào.
