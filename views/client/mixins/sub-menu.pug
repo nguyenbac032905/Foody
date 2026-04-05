@@ -4,9 +4,7 @@ mixin sub-menu(pathProduct,layoutProductCategory,level=1)
             .sub-item
                 a(href=`${pathProduct}/${item.slug}`)
                     if(level==1)
-                        .title 
-                            img(src=item.thumbnail alt=item.title)
-                            span #{item.title}
+                        .title #{item.title}
                     else 
                         .images
                             .item

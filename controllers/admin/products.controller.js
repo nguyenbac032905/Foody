@@ -178,7 +178,7 @@ module.exports.createPost = async (req,res) => {
     };
     // cú pháp tạo mới
     const product = new Product(req.body);
-    // await product.save();
+    await product.save();
     console.log(req.body)
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
